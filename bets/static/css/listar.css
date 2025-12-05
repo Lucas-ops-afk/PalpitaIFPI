@@ -1,4 +1,4 @@
-/* listar.css - Cards de Jogos Bet365 com Efeitos e Responsividade */
+
 
 .games-header {
     display: flex;
@@ -15,18 +15,17 @@
     font-weight: 700;
 }
 
-/* --- Abas de Modalidade (Chips Modernos) --- */
 .modalidade-tabs {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
     flex-wrap: nowrap; 
-    overflow-x: auto; /* Permite scroll horizontal no mobile */
+    overflow-x: auto; 
     padding-bottom: 5px;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
 }
 .modalidade-tabs::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
+    display: none;
 }
 
 .modalidade-tab {
@@ -56,16 +55,15 @@
     box-shadow: 0 0 8px var(--glow-green);
 }
 
-/* --- Layout dos Jogos (Cards) --- */
 .games-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 10px; /* Espaço entre os cards */
+    border-spacing: 0 10px;
     margin-top: 20px;
 }
 
 .games-table thead {
-    display: none; /* Oculta cabeçalho no layout de card */
+    display: none;
 }
 
 .games-table tbody tr {
@@ -111,7 +109,7 @@
     color: var(--text-muted);
 }
 
-/* --- Botões de Odds (O coração do visual Bet365) --- */
+
 .odd-container {
     display: flex;
     gap: 8px;
@@ -122,9 +120,9 @@
 .odd-button {
     display: inline-block;
     padding: 10px 15px;
-    background: #333; /* Fundo cinza escuro */
+    background: #333; 
     border: 1px solid #555;
-    color: var(--primary-yellow); /* Odds em amarelo/ouro */
+    color: var(--primary-yellow);
     text-decoration: none;
     border-radius: 4px;
     font-weight: 700;
@@ -162,9 +160,6 @@
     transform: translateY(-1px);
 }
 
-/* ================================================= */
-/* --- RESPONSIVIDADE (Telas Menores) --- */
-/* ================================================= */
 
 @media (max-width: 768px) {
     .games-table tbody tr {
@@ -209,8 +204,6 @@
     }
 }
 
-/* --- Estilo para Jogos Finalizados (Melhoria) --- */
-/* Isso será aplicado na <tr> dos jogos que já têm placar final */
 
 .games-table tbody tr.game-finished {
     background: #181818; /* Fundo mais escuro */
@@ -219,12 +212,11 @@
     opacity: 0.7; /* Diminui a opacidade para dar a sensação de inativo/passado */
 }
 
-/* Garante que o hover não traga de volta o brilho do jogo finalizado */
 .games-table tbody tr.game-finished:hover {
     border-color: #555;
     box-shadow: none;
-    opacity: 1; /* Aumenta um pouco ao passar o mouse, mas sem brilho de aposta */
-    transform: none; /* Remove o leve zoom de hover */
+    opacity: 1;
+    transform: none; 
 }
 
 .games-table tbody tr.game-finished .odd-button {

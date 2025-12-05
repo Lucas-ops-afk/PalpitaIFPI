@@ -1,4 +1,4 @@
-/* criar_palpite.css - Formulários Bet365 com Foco e Responsividade */
+
 
 .bg-f8f9fa {
     background: var(--bg-card);
@@ -20,7 +20,6 @@
     font-size: 14px;
 }
 
-/* Info (Verde) */
 .bg-e7f3ff {
     background: rgba(18, 110, 81, 0.1);
     padding: 18px;
@@ -33,7 +32,6 @@
 
 .mt-30 { margin-top: 30px; }
 
-/* Layout Flex para os Placar */
 .flex-center-wrap {
     display: flex;
     gap: 20px;
@@ -46,7 +44,6 @@
     min-width: 150px;
 }
 
-/* Estilo do "X" Central */
 .x-bold {
     font-size: 2.5em;
     font-weight: bold;
@@ -58,7 +55,7 @@
 
 .ml-10 { margin-left: 10px; }
 
-/* Lista de Regras/Informações */
+
 .ul-custom {
     margin-top: 15px;
     margin-left: 20px;
@@ -66,7 +63,6 @@
     color: var(--text-muted);
 }
 
-/* Inputs, Selects e Botões (Reaplicados para ter foco no formulário) */
 input[type="number"], input[type="text"], select {
     width: 100%;
     padding: 10px;
@@ -88,7 +84,6 @@ input:focus, select:focus {
     
 }
 
-/* Estilo dos Botões - Herdado do base.css, mas garantindo visual */
 .btn {
     display: inline-block;
     padding: 12px 30px;
@@ -132,7 +127,6 @@ input:focus, select:focus {
         margin: 15px 0;
     }
     
-    /* Inputs e botões em tela cheia */
     input[type="number"], input[type="text"], select, .btn, .btn-secondary {
         width: 100%;
         margin-top: 5px;
@@ -144,12 +138,10 @@ input:focus, select:focus {
     }
 }
 
-/* --- Melhorias na Estilização da Página de Aposta --- */
 
-/* Contêiner Principal da Aposta */
+
 .bet-card {
-    /* bg-f8f9fa já está definido, apenas como lembrete */
-    max-width: 600px; /* Limita a largura do formulário */
+    max-width: 600px; 
     margin: 40px auto;
 }
 
@@ -180,7 +172,6 @@ input:focus, select:focus {
     font-style: italic;
 }
 
-/* Layout dos Inputs de Placar */
 .score-input-group {
     display: flex;
     justify-content: space-around;
@@ -203,13 +194,13 @@ input:focus, select:focus {
 .score-team-input label {
     display: block;
     margin-bottom: 10px;
-    color: var(--primary-yellow); /* Destaque para o nome do time */
+    color: var(--primary-yellow); 
     font-weight: bold;
     font-size: 15px;
 }
 
 .score-team-input input[type="number"] {
-    width: 100px; /* Tamanho fixo para placar */
+    width: 100px; 
     padding: 15px 10px;
     font-size: 20px;
     text-align: center;
@@ -217,10 +208,9 @@ input:focus, select:focus {
     border-radius: 6px;
     background: #252525;
     color: #fff;
-    /* Foco: usa o estilo de input já definido no criar_palpite.css */
+
 }
 
-/* Estilo para o campo de XP/Pontos (Destaque) */
 .xp-input-label label {
     color: var(--primary-green);
     font-size: 1.1em;
@@ -232,7 +222,6 @@ input:focus, select:focus {
     color: var(--primary-green);
 }
 
-/* --- Estilo Específico da Página de Aposta (apostar.html) APRIMORADO --- */
 
 /* Card Principal da Aposta */
 .aposta-container {
