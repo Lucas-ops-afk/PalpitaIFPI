@@ -1,3 +1,54 @@
+from django.contrib.auth import logout as auth_logout
+
+def logout_view(request):
+    auth_logout(request)
+    return redirect('login')
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        errors = {}
+        if not username or not email or not password1 or not password2:
+            errors['fields'] = 'Preencha todos os campos.'
+        if password1 != password2:
+            errors['password'] = 'As senhas não coincidem.'
+        if User.objects.filter(username=username).exists():
+            errors['username'] = 'Usuário já existe.'
+        if User.objects.filter(email=email).exists():
+            errors['email'] = 'E-mail já cadastrado.'
+        if errors:
+            return render(request, 'register.html', {'form': errors})
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.save()
+        user = authenticate(request, username=username, password=password1)
+        if user:
+            auth_login(request, user)
+            return redirect('listar_jogos')
+    return render(request, 'register.html', {'form': {}})
+
+# IMPORTS (mover para o topo do arquivo se necessário)
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as auth_login
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
+from .models import Perfil, Jogo, Modalidade, Palpite, Aposta, TipoAposta, Medalha
+from django.db.models import Q
+
+def login_view(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.get_user()
+        auth_login(request, user)
+        if user.is_superuser:
+            return redirect('/admin/')
+        return redirect('listar_jogos')
+    return render(request, 'login.html', {'form': form})
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,6 +57,7 @@ from .models import Perfil, Jogo, Modalidade, Palpite, Aposta, TipoAposta
 from django.db.models import Q
 from decimal import Decimal
 
+@login_required
 def home(request):
     """Página inicial com informações sobre o sistema"""
     modalidades = Modalidade.objects.all()
@@ -20,11 +72,14 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+@login_required
 def ranking_view(request):
-    """Exibe o ranking de jogadores por XP"""
+    """Exibe o ranking de jogadores por XP e todas as medalhas do sistema"""
     top = Perfil.objects.select_related('user').order_by('-xp')[:50]
-    return render(request, 'ranking.html', {'top': top})
+    medalhas = Medalha.objects.all()
+    return render(request, 'ranking.html', {'top': top, 'medalhas': medalhas})
 
+@login_required
 def listar_jogos(request, modalidade_id=None):
     """Lista todos os jogos, opcionalmente filtrados por modalidade"""
     jogos = Jogo.objects.select_related('modalidade').all()
@@ -138,37 +193,21 @@ def apostar(request, jogo_id):
     
     if request.method == 'POST':
         tipo_aposta = request.POST.get('tipo_aposta')
-        valor_apostado = request.POST.get('valor_apostado')
         
         try:
-            valor_apostado = Decimal(valor_apostado)
-            
-            # Validar valor mínimo
-            if valor_apostado < Decimal('1.00'):
-                messages.error(request, 'O valor mínimo de aposta é R$ 1,00!')
-                return redirect('apostar', jogo_id=jogo.id)
-            
-            odd_aposta = None
             aposta_1x2 = None
             palpite_time1 = None
             palpite_time2 = None
             
             if tipo_aposta == TipoAposta.RESULTADO_1X2:
                 aposta_1x2 = request.POST.get('aposta_1x2')
-                if aposta_1x2 == '1':
-                    odd_aposta = jogo.odd_time1
-                elif aposta_1x2 == 'X':
-                    odd_aposta = jogo.odd_empate
-                elif aposta_1x2 == '2':
-                    odd_aposta = jogo.odd_time2
-                else:
+                if aposta_1x2 not in ['1', 'X', '2']:
                     messages.error(request, 'Selecione uma opção válida!')
                     return redirect('apostar', jogo_id=jogo.id)
             
             elif tipo_aposta == TipoAposta.PLACAR_EXATO:
                 palpite_time1 = int(request.POST.get('palpite_time1', 0))
                 palpite_time2 = int(request.POST.get('palpite_time2', 0))
-                odd_aposta = jogo.odd_placar_exato
                 
                 if palpite_time1 < 0 or palpite_time2 < 0:
                     messages.error(request, 'Os placares não podem ser negativos!')
@@ -181,18 +220,11 @@ def apostar(request, jogo_id):
                 tipo=tipo_aposta,
                 aposta_1x2=aposta_1x2,
                 palpite_time1=palpite_time1,
-                palpite_time2=palpite_time2,
-                valor_apostado=valor_apostado,
-                odd_aposta=odd_aposta,
-                status='PENDENTE'
+                palpite_time2=palpite_time2
             )
             
-            # Calcular ganho potencial
-            aposta.calcular_ganho_potencial()
-            aposta.save()
-            
-            messages.success(request, f'Aposta criada com sucesso! Ganho potencial: R$ {aposta.ganho_potencial:.2f}')
-            return redirect('minhas_apostas')
+            messages.success(request, 'Aposta criada com sucesso!')
+            return redirect('meus_palpites')
             
         except (ValueError, TypeError) as e:
             messages.error(request, 'Por favor, insira valores válidos!')
@@ -203,31 +235,3 @@ def apostar(request, jogo_id):
     }
     return render(request, 'apostas/apostar.html', context)
 
-@login_required
-def minhas_apostas(request):
-    """Lista todas as apostas do usuário (sistema tipo Bet365)"""
-    apostas = Aposta.objects.filter(
-        usuario=request.user
-    ).select_related('jogo', 'jogo__modalidade').order_by('-criado_em')
-    
-    perfil, created = Perfil.objects.get_or_create(user=request.user)
-    
-    # Estatísticas
-    total_apostas = apostas.count()
-    apostas_ganhas = apostas.filter(status='GANHOU').count()
-    apostas_perdidas = apostas.filter(status='PERDEU').count()
-    apostas_pendentes = apostas.filter(status='PENDENTE').count()
-    total_ganho = sum(a.ganho_realizado for a in apostas.filter(status='GANHOU'))
-    total_apostado = sum(a.valor_apostado for a in apostas)
-    
-    context = {
-        'apostas': apostas,
-        'perfil': perfil,
-        'total_apostas': total_apostas,
-        'apostas_ganhas': apostas_ganhas,
-        'apostas_perdidas': apostas_perdidas,
-        'apostas_pendentes': apostas_pendentes,
-        'total_ganho': total_ganho,
-        'total_apostado': total_apostado,
-    }
-    return render(request, 'apostas/minhas_apostas.html', context)

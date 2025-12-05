@@ -1,11 +1,24 @@
 from django.db import models
+
+class Medalha(models.Model):
+    nome = models.CharField(max_length=100)
+    imagem = models.ImageField(upload_to='medalhas/')
+    descricao = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nome
+
+
+
+from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
 
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
-    xp = models.IntegerField(default=0)
+    xp = models.IntegerField(default=200)
     nivel = models.IntegerField(default=1)
+    medalhas = models.ManyToManyField('Medalha', blank=True, related_name='perfis')
     
     def atualizar_nivel(self):
         # Exemplo de progressão simples; adapte como quiser
@@ -35,6 +48,7 @@ class Jogo(models.Model):
     placar_time1 = models.IntegerField(null=True, blank=True)
     placar_time2 = models.IntegerField(null=True, blank=True)
     finalizado = models.BooleanField(default=False)  # marca quando resultado for publicado
+    xp_valor = models.IntegerField(default=10, help_text="XP definido pelo admin para este jogo")
     
     # Odds para mercado 1X2
     odd_time1 = models.DecimalField(max_digits=5, decimal_places=2, default=2.00, help_text="Odd para vitória do Time 1")
@@ -76,58 +90,16 @@ class Aposta(models.Model):
     palpite_time2 = models.IntegerField(null=True, blank=True)
     
     # Valores da aposta
-    valor_apostado = models.DecimalField(max_digits=10, decimal_places=2)
-    odd_aposta = models.DecimalField(max_digits=5, decimal_places=2)
-    ganho_potencial = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    
-    # Status da aposta
-    STATUS_CHOICES = [
-        ('PENDENTE', 'Pendente'),
-        ('GANHOU', 'Ganhou'),
-        ('PERDEU', 'Perdeu'),
-        ('CANCELADA', 'Cancelada'),
-    ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDENTE')
-    ganho_realizado = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    
+    # Removido: valor_apostado, odd_aposta, ganho_potencial, ganho_realizado, status, métodos de dinheiro
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
-    
     class Meta:
         ordering = ['-criado_em']
-    
-    def calcular_ganho_potencial(self):
-        """Calcula o ganho potencial baseado no valor apostado e odd"""
-        self.ganho_potencial = self.valor_apostado * self.odd_aposta
-        return self.ganho_potencial
-    
-    def verificar_resultado(self):
-        """Verifica se a aposta ganhou ou perdeu"""
-        if self.jogo.finalizado and self.jogo.placar_time1 is not None and self.jogo.placar_time2 is not None:
-            if self.tipo == TipoAposta.RESULTADO_1X2:
-                resultado_jogo = self.jogo.calcular_resultado_1x2()
-                if resultado_jogo == self.aposta_1x2:
-                    self.status = 'GANHOU'
-                    self.ganho_realizado = self.ganho_potencial
-                else:
-                    self.status = 'PERDEU'
-                    self.ganho_realizado = 0
-            elif self.tipo == TipoAposta.PLACAR_EXATO:
-                if (self.palpite_time1 == self.jogo.placar_time1 and 
-                    self.palpite_time2 == self.jogo.placar_time2):
-                    self.status = 'GANHOU'
-                    self.ganho_realizado = self.ganho_potencial
-                else:
-                    self.status = 'PERDEU'
-                    self.ganho_realizado = 0
-            self.save()
-            return self.status
-    
     def __str__(self):
         if self.tipo == TipoAposta.RESULTADO_1X2:
-            return f"{self.usuario.username} - {self.jogo}: {self.aposta_1x2} (R$ {self.valor_apostado})"
+            return f"{self.usuario.username} - {self.jogo}: {self.aposta_1x2}"
         else:
-            return f"{self.usuario.username} - {self.jogo}: {self.palpite_time1}x{self.palpite_time2} (R$ {self.valor_apostado})"
+            return f"{self.usuario.username} - {self.jogo}: {self.palpite_time1}x{self.palpite_time2}"
 
 # Mantendo o modelo Palpite antigo para compatibilidade (pode ser removido depois)
 class Palpite(models.Model):

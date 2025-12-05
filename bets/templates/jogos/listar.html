@@ -3,128 +3,7 @@
 {% block title %}Jogos - PalpitaIFPI{% endblock %}
 
 {% block extra_css %}
-<style>
-    .games-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #00ff00;
-    }
-    .games-header h2 {
-        color: #00ff00;
-        margin: 0;
-        font-size: 18px;
-        text-transform: uppercase;
-    }
-    .modalidade-tabs {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .modalidade-tab {
-        padding: 8px 15px;
-        background: #161b22;
-        border: 1px solid #00ff00;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 3px;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-    .modalidade-tab:hover {
-        background: rgba(0,255,0,0.2);
-        color: #00ff00;
-    }
-    .modalidade-tab.active {
-        background: #00ff00;
-        color: #000000;
-        font-weight: bold;
-    }
-    .games-table {
-        width: 100%;
-        background: #161b22;
-        border: 1px solid #00ff00;
-        border-radius: 3px;
-        overflow: hidden;
-    }
-    .games-table thead {
-        background: #000000;
-    }
-    .games-table th {
-        padding: 12px;
-        text-align: center;
-        color: #00ff00;
-        font-size: 12px;
-        font-weight: bold;
-        text-transform: uppercase;
-        border-right: 1px solid #00ff00;
-    }
-    .games-table th:last-child {
-        border-right: none;
-    }
-    .games-table td {
-        padding: 15px 12px;
-        text-align: center;
-        border-bottom: 1px solid rgba(0,255,0,0.2);
-        border-right: 1px solid rgba(0,255,0,0.1);
-    }
-    .games-table td:last-child {
-        border-right: none;
-    }
-    .games-table tr:hover {
-        background: rgba(0,255,0,0.05);
-    }
-    .game-info {
-        text-align: left;
-    }
-    .game-teams {
-        font-weight: bold;
-        color: #ffffff;
-        margin-bottom: 5px;
-    }
-    .game-meta {
-        font-size: 11px;
-        color: #888;
-    }
-    .odd-button {
-        display: inline-block;
-        padding: 10px 15px;
-        background: #161b22;
-        border: 1px solid #00ff00;
-        color: #00ff00;
-        text-decoration: none;
-        border-radius: 3px;
-        font-weight: bold;
-        font-size: 14px;
-        min-width: 60px;
-        transition: all 0.2s;
-        cursor: pointer;
-    }
-    .odd-button:hover {
-        background: #00ff00;
-        color: #000000;
-        transform: scale(1.05);
-    }
-    .bet-button {
-        padding: 8px 20px;
-        background: #00ff00;
-        color: #000000;
-        border: none;
-        border-radius: 3px;
-        font-weight: bold;
-        text-decoration: none;
-        font-size: 14px;
-        transition: all 0.2s;
-        display: inline-block;
-    }
-    .bet-button:hover {
-        background: #00cc00;
-        transform: scale(1.05);
-    }
-</style>
+<link rel="stylesheet" href="/static/css/listar.css">
 {% endblock %}
 
 {% block content %}
@@ -208,41 +87,56 @@
     </div>
 {% endif %}
 
-<h3 style="margin-top: 40px;">📊 Jogos Passados</h3>
+<h3 style="margin-top: 40px; color: #fff; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+    ✅ Resultados Finais
+</h3>
+
 {% if jogos_passados %}
-    <table>
-        <thead>
-            <tr>
-                <th>Modalidade</th>
-                <th>Jogo</th>
-                <th>Placar Final</th>
-                <th>Data</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for jogo in jogos_passados %}
+    <div class="ranking-container">
+        <table class="ranking-table">
+            <thead>
                 <tr>
-                    <td>{{ jogo.modalidade.nome }}</td>
-                    <td><strong>{{ jogo.time1 }} x {{ jogo.time2 }}</strong></td>
-                    <td>
-                        {% if jogo.placar_time1 is not None and jogo.placar_time2 is not None %}
-                            <strong>{{ jogo.placar_time1 }} x {{ jogo.placar_time2 }}</strong>
-                        {% else %}
-                            <em>Aguardando resultado</em>
-                        {% endif %}
-                    </td>
-                    <td>{{ jogo.data|date:"d/m/Y H:i" }}</td>
+                    <th>Data</th>
+                    <th>Modalidade</th>
+                    <th>Jogo</th>
+                    <th>Placar Final</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for jogo in jogos_passados %}
+                    <tr>
+                        <td>
+                            <small style="color: var(--text-muted);">
+                                {{ jogo.data|date:"d/m H:i" }}
+                            </small>
+                        </td>
+                        <td>{{ jogo.modalidade.nome }}</td>
+                        <td>
+                            <strong>{{ jogo.time1 }} <span style="color: var(--text-muted);">vs</span> {{ jogo.time2 }}</strong>
+                        </td>
+                        <td>
+                            {% if jogo.placar_time1 is not None and jogo.placar_time2 is not None %}
+                                <strong class="xp-val">
+                                    {{ jogo.placar_time1 }} x {{ jogo.placar_time2 }}
+                                </strong>
+                            {% else %}
+                                <span style="color: var(--text-muted);">Aguardando...</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% else %}
-    <p style="color: #666; font-style: italic; margin-top: 10px;">
+    <p style="color: var(--text-muted); font-style: italic; margin-top: 10px;">
         Nenhum jogo passado cadastrado.
     </p>
 {% endif %}
 
 <div style="margin-top: 30px;">
-    <a href="{% url 'home' %}" class="btn btn-secondary">Voltar para Home</a>
+    <a href="{% url 'home' %}" class="btn" style="background: #333; border: 1px solid #555; color: #fff;">
+        Voltar para Home
+    </a>
 </div>
 {% endblock %}

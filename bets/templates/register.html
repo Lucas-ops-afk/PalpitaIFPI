@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Criar Conta - PalpitaIFPI{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/login.css">
+<div class="login-container">
+    <h2>Criar Conta</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="login-error">{{ form.errors|striptags }}</div>
+        {% endif %}
+        <div class="form-group">
+            <label for="id_username">Usuário</label>
+            <input type="text" name="username" required id="id_username">
+        </div>
+        <div class="form-group">
+            <label for="id_email">E-mail</label>
+            <input type="email" name="email" required id="id_email">
+        </div>
+        <div class="form-group">
+            <label for="id_password1">Senha</label>
+            <input type="password" name="password1" required id="id_password1">
+        </div>
+        <div class="form-group">
+            <label for="id_password2">Confirmar Senha</label>
+            <input type="password" name="password2" required id="id_password2">
+        </div>
+        <button type="submit" class="btn">Criar Conta</button>
+        <div style="margin-top: 18px; text-align: center;">
+            <a href="/login/" style="color: #2bb24c;">Já tem conta? Entrar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

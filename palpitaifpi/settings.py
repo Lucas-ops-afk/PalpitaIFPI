@@ -1,3 +1,6 @@
+# Redirecionamento de login
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/jogos/'
 """
 Django settings for palpitaifpi project.
 

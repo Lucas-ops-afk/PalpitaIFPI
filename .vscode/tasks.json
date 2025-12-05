@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Gerar migração para Medalha",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"manage.py",
+				"makemigrations",
+				"bets"
+			],
+			"group": "build"
+		}
+	]
+}

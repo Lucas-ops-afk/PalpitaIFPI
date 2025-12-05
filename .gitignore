@@ -1,74 +1,27 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
-myvenv/
-venv/
-ENV/
-env/
-.venv
-
 # Django
 *.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-/media
-/staticfiles
-/static
+*.pot
+*.pyc
+__pycache__/
+*~$
+/local_settings.py
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Ambientes virtuais
+/venv/
+/env/
+/myvenv/
+
+# Banco de dados (SQLite)
+*.sqlite3
+
+# Mídia local (uploads de usuários)
+/media/
+
+# Static files (se você usar collectstatic)
+/staticfiles/
+
+# Python: Ignore scripts Python compilados
+*.exe
+*.dll
+*.so
 .DS_Store
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Coverage
-htmlcov/
-.coverage
-.coverage.*
-coverage.xml
-*.cover
-
-# Pytest
-.pytest_cache/
-
-# Migrations (opcional - descomente se não quiser versionar)
-# */migrations/*.py
-# !*/migrations/__init__.py
-
-# Secrets
-secrets.json
-*.pem
-*.key
-
-# OS
-Thumbs.db
-.DS_Store
-

@@ -3,43 +3,75 @@
 {% block title %}Ranking - PalpitaIFPI{% endblock %}
 
 {% block content %}
-<h2>🏆 Ranking de Jogadores</h2>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>🏆 Ranking Geral</h2>
+    <div style="font-size: 12px; color: #888;">Top Jogadores</div>
+</div>
 
 {% if top %}
-    <table style="margin-top: 20px;">
-        <thead>
-            <tr>
-                <th style="width: 60px;">#</th>
-                <th>Usuário</th>
-                <th style="text-align: right;">XP</th>
-                <th style="text-align: center;">Nível</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in top %}
+    <div class="ranking-container">
+        <table class="ranking-table">
+            <thead>
                 <tr>
-                    <td style="font-weight: bold; color: #667eea;">{{ forloop.counter }}</td>
-                    <td style="font-weight: 500;">{{ p.user.username }}</td>
-                    <td style="text-align: right; color: #28a745; font-weight: bold;">{{ p.xp }} XP</td>
-                    <td style="text-align: center;">
-                        <span style="background: #667eea; color: white; padding: 5px 12px; border-radius: 15px; font-weight: bold;">
-                            Nível {{ p.nivel }}
-                        </span>
-                    </td>
+                    <th style="width: 50px; text-align: center;">Pos</th>
+                    <th>Jogador</th>
+                    <th>Medalhas</th>
+                    <th style="text-align: right;">Experiência</th>
+                    <th style="text-align: center;">Nível</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for p in top %}
+                    <tr>
+                        <td style="text-align: center;">
+                            {% if forloop.counter == 1 %}
+                                <span class="rank-pos rank-1">🥇 1</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="rank-pos rank-2">🥈 2</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="rank-pos rank-3">🥉 3</span>
+                            {% else %}
+                                <span class="rank-pos">#{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-weight: 500; color: #fff;">
+                            {{ p.user.username }}
+                            {% if p.user == user %} <span style="font-size: 10px; color: var(--primary-yellow); margin-left: 5px;">(Você)</span> {% endif %}
+                        </td>
+                        <td style="text-align: left;">
+                            {% if p.medalhas.all %}
+                                <span class="medalhas-list">
+                                    {% for medalha in p.medalhas.all %}
+                                        <img src="{{ medalha.imagem.url }}" alt="{{ medalha.nome }}" title="{{ medalha.nome }}" style="height:22px; width:22px; margin-right:2px; border-radius:50%; border:2px solid #FFD700; background:#fff;" />
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right;">
+                            <span class="xp-val">{{ p.xp }} XP</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="level-badge">
+                                NVL {{ p.nivel }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% else %}
-    <div style="background: #f8f9fa; padding: 30px; border-radius: 5px; text-align: center; margin-top: 20px;">
-        <p style="color: #666; font-style: italic; font-size: 1.1em;">
-            Ainda não há jogadores no ranking. Seja o primeiro a fazer um palpite!
+    <div class="dashboard-card" style="text-align: center; padding: 40px;">
+        <div style="font-size: 40px; margin-bottom: 10px;">📉</div>
+        <p class="text-muted">
+            O ranking ainda está vazio.<br>
+            Seja o primeiro a fazer um palpite e conquiste o topo!
         </p>
-        <a href="{% url 'listar_jogos' %}" class="btn" style="margin-top: 20px;">Ver Jogos</a>
+        <a href="{% url 'listar_jogos' %}" class="btn" style="margin-top: 20px;">Começar a Jogar</a>
     </div>
 {% endif %}
 
 <div style="margin-top: 30px;">
-    <a href="{% url 'home' %}" class="btn btn-secondary">Voltar para Home</a>
+    <a href="{% url 'home' %}" class="btn btn-secondary">← Voltar para Home</a>
 </div>
 {% endblock %}

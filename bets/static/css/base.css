@@ -1,0 +1,421 @@
+/* base.css - Atualizado para corrigir sumiço de botões */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --bg-dark: #121212;
+    --bg-card: #1C1C1C;
+    --primary-green: #126E51;
+    --primary-yellow: #FFDF1B;
+    --glow-green: rgba(18, 110, 81, 0.5);
+    --text-main: #e0e0e0;
+    --text-muted: #999999;
+    --border: #333333;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s ease; }
+body { font-family: 'Roboto', sans-serif; background-color: var(--bg-dark); color: var(--text-main); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+.container { display: flex; min-height: 100vh; }
+
+/* --- Header --- */
+header {
+    background: var(--primary-green);
+    color: #ffffff;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between; /* Espalha itens: Menu - Logo - Botoes */
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+header h1 {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-right: auto; /* Empurra o logo para a esquerda junto com o menu */
+    margin-left: 15px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Links normais do header (Home, Jogos...) */
+.header-nav a:not(.btn-login, .btn-logout, .btn-register) {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px;
+}
+.header-nav a:hover { color: var(--primary-yellow); }
+
+/* --- Botões de Ação no Header --- */
+.btn-login {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 6px 10px;
+}
+.btn-login:hover { color: var(--primary-yellow); }
+
+.btn-register {
+    background: var(--primary-yellow);
+    color: var(--primary-green);
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+.btn-register:hover {
+    background: #fff;
+    color: #000;
+    transform: translateY(-1px);
+}
+.btn-logout { color: #fff; text-decoration: none; font-weight: bold; font-size: 13px; }
+
+/* --- Menu Hamburguer --- */
+.menu-toggle {
+    display: none; /* Escondido no desktop */
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 260px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 60px;
+    z-index: 100;
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+}
+.sidebar-section h3 {
+    color: var(--primary-yellow);
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 15px 20px;
+    background: #181818;
+    border-bottom: 1px solid var(--border);
+}
+.sidebar-link {
+    display: block;
+    color: var(--text-muted);
+    padding: 12px 20px;
+    border-bottom: 1px solid #282828;
+    text-decoration: none;
+}
+.sidebar-link:hover {
+    background: #282828;
+    color: #ffffff;
+    border-left: 4px solid var(--primary-green);
+    padding-left: 16px;
+}
+.sidebar-link.active {
+    background: #222;
+    color: var(--primary-green);
+    border-left: 4px solid var(--primary-green);
+    font-weight: bold;
+}
+.mobile-only-auth { display: none; } /* Esconde auth na sidebar no Desktop */
+
+/* --- Conteúdo --- */
+.main-content { margin-left: 260px; flex: 1; min-height: 100vh; }
+main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+footer { background: #181818; padding: 30px; text-align: center; color: #666; font-size: 12px; border-top: 1px solid #333; }
+
+/* ================================================= */
+/* --- RESPONSIVIDADE (Celular/Tablet) --- */
+/* ================================================= */
+
+@media (max-width: 1024px) {
+    /* 1. Header: Mostra Menu Toggle e Botões de Conta, esconde links de texto */
+    .menu-toggle { display: block; }
+    
+    /* ESCONDE links de texto (Home, Jogos) */
+    .header-nav a:not(.btn-login, .btn-logout, .btn-register) {
+        display: none;
+    }
+
+    /* 2. Sidebar (Menu Lateral) */
+    .sidebar {
+        left: -260px; /* Esconde fora da tela */
+        top: 0;
+        height: 100%;
+        padding-top: 60px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+    }
+    .sidebar.active { left: 0; } /* Mostra ao clicar */
+
+    .mobile-only-auth { display: block; } /* Mostra Login/Cadastro DENTRO do menu */
+
+    /* 3. Ajuste de Layout */
+    .main-content { margin-left: 0; }
+    header h1 { font-size: 1.2em; }
+    
+    /* Ajuste fino dos botões do header no mobile */
+    .btn-login { font-size: 12px; padding: 5px; }
+    .btn-register { font-size: 12px; padding: 5px 10px; }
+}
+
+
+/* --- ADICIONAR AO FINAL DO base.css --- */
+
+/* ========================================= */
+/* ESTILOS DA HOME (DASHBOARD) E RANKING */
+/* ========================================= */
+
+/* Container de Cards (Substitui os fundos brancos) */
+.dashboard-card {
+    background: var(--bg-card);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Barra de destaque no topo do card (Estilo Bet365) */
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-green);
+}
+
+.dashboard-card h3 {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Lista de Modalidades (Chips) */
+.mod-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.mod-list li a {
+    display: block;
+    background: #282828;
+    color: var(--text-main);
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid #333;
+    transition: all 0.3s;
+}
+
+.mod-list li a:hover {
+    background: var(--primary-green);
+    color: #fff;
+    border-color: var(--primary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px var(--glow-green);
+}
+
+/* Lista de Próximos Jogos (Mini Cards) */
+.mini-game-list {
+    list-style: none;
+    padding: 0;
+}
+
+.mini-game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #121212;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #333;
+    transition: all 0.2s;
+}
+
+.mini-game-item:hover {
+    border-color: var(--primary-yellow);
+}
+
+.mini-game-info strong {
+    color: var(--primary-yellow);
+    display: block;
+    font-size: 14px;
+}
+
+.mini-game-info span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Card de "Como Funciona" */
+.info-box {
+    background: rgba(18, 110, 81, 0.15); /* Fundo verde transparente */
+    border: 1px solid var(--primary-green);
+    color: #aaddcc;
+}
+.info-box ul {
+    list-style: none;
+    padding-left: 5px;
+}
+.info-box li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.info-box li::before {
+    content: '✔';
+    color: var(--primary-yellow);
+    font-weight: bold;
+}
+
+/* --- ESTILOS DO RANKING (TABELA DARK) --- */
+.ranking-container {
+    overflow-x: auto; /* Scroll no mobile */
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px; /* Espaço entre linhas */
+}
+
+.ranking-table thead th {
+    background: #121212;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 10px;
+    text-align: left;
+}
+
+.ranking-table tbody tr {
+    background: var(--bg-card);
+    transition: transform 0.2s;
+}
+
+.ranking-table tbody tr:hover {
+    transform: scale(1.01);
+    background: #252525;
+}
+
+.ranking-table td {
+    padding: 15px 10px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    color: #fff;
+}
+
+.ranking-table td:first-child { border-left: 1px solid #333; border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+.ranking-table td:last-child { border-right: 1px solid #333; border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
+
+/* Badges e Destaques do Ranking */
+.rank-pos {
+    font-weight: bold;
+    color: var(--text-muted);
+}
+.rank-1 { color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); font-size: 1.2em; } /* Ouro */
+.rank-2 { color: #C0C0C0; font-size: 1.1em; } /* Prata */
+.rank-3 { color: #CD7F32; font-size: 1.1em; } /* Bronze */
+
+.xp-val {
+    color: var(--primary-green);
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
+.level-badge {
+    background: #333;
+    color: var(--primary-yellow);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    border: 1px solid #444;
+    text-transform: uppercase;
+}
+
+/* Responsividade Mobile Específica */
+@media (max-width: 600px) {
+    .mini-game-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .mini-game-item .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+.ranking-table tbody tr.palpite-certo {
+    background: #182828; /* Fundo levemente mais escuro/verde */
+    border-color: var(--primary-green);
+    box-shadow: 0 0 10px var(--glow-green);
+}
+.ranking-table tbody tr.palpite-certo:hover {
+    background: #1e3b3b;
+}
+        
+
+/* --- Estilo Global de Links (<a>) --- */
+
+a {
+    color: var(--primary-yellow); /* Cor padrão do link: Amarelo/Dourado */
+    text-decoration: none; /* Remove sublinhado padrão */
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+a:hover {
+    color: #fff; /* Fica branco no hover */
+    text-decoration: underline; /* Adiciona sublinhado discreto no hover */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Links dentro do corpo de texto que devem ser mais discretos */
+/* Use esta classe (<a class="text-link" href="...">) quando precisar */
+.text-link {
+    color: var(--text-main);
+    text-decoration: underline;
+}
+
+.text-link:hover {
+    color: var(--primary-yellow);
+}
+
+/* Links em botões (.btn) já são estilizados no base.css/criar_palpite.css, 
+   portanto, eles herdarão apenas o transition. */

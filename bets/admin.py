@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Modalidade, Jogo, Palpite, Perfil, Aposta
+from .models import Modalidade, Jogo, Palpite, Perfil, Aposta, Medalha
+
+# Admin para Medalha
+@admin.register(Medalha)
+class MedalhaAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'imagem', 'descricao')
 
 @admin.register(Modalidade)
 class ModalidadeAdmin(admin.ModelAdmin):
@@ -23,9 +28,9 @@ class JogoAdmin(admin.ModelAdmin):
 
 @admin.register(Aposta)
 class ApostaAdmin(admin.ModelAdmin):
-    list_display = ('usuario','jogo','tipo','valor_apostado','odd_aposta','status','ganho_realizado','criado_em')
-    list_filter = ('tipo','status','criado_em')
-    readonly_fields = ('ganho_potencial','criado_em','atualizado_em')
+    list_display = ('usuario','jogo','tipo','aposta_1x2','palpite_time1','palpite_time2','criado_em')
+    list_filter = ('tipo','criado_em')
+    readonly_fields = ('criado_em','atualizado_em')
     search_fields = ('usuario__username','jogo__time1','jogo__time2')
 
 @admin.register(Palpite)
@@ -36,3 +41,4 @@ class PalpiteAdmin(admin.ModelAdmin):
 class PerfilAdmin(admin.ModelAdmin):
     list_display = ('user','xp','nivel')
     readonly_fields = ('xp','nivel')
+    filter_horizontal = ('medalhas',)

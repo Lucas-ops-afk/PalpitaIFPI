@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Login - PalpitaIFPI{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/login.css">
+<div class="login-container">
+    <h2>Entrar no PalpitaIFPI</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="login-error">Usuário ou senha inválidos.</div>
+        {% endif %}
+        <div class="form-group">
+            <label for="id_username">Usuário</label>
+            <input type="text" name="username" autofocus required id="id_username">
+        </div>
+        <div class="form-group">
+            <label for="id_password">Senha</label>
+            <input type="password" name="password" required id="id_password">
+        </div>
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+</div>
+{% endblock %}
